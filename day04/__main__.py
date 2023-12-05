@@ -17,3 +17,10 @@ with open(os.path.join(os.path.dirname(__file__), argv[1])) as fp:
     matches = [parse(line) for line in fp.readlines()]
     scores = [pow(2, len(match) - 1) for match in matches if match]
     print('Part 1:', sum(scores))
+
+    counts = [1] * len(matches)
+    for i, match in enumerate(matches):
+        for j in range(i + 1, i + len(match) + 1):
+            counts[j] += 1 * counts[i]
+
+    print('Part 2:', sum(counts))
