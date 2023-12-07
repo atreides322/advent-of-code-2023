@@ -45,10 +45,7 @@ with open(os.path.join(os.path.dirname(__file__), argv[1])) as fp:
 
         else:
             dest_start, source_start, count = [int(number) for number in line.split(' ')]
-
-            for i, source in enumerate(range(source_start, source_start + count)):
-                dest = dest_start + i
-                the_diagram.setdefault(state, {})[source] = dest
+            the_diagram.setdefault(state, {})[(source_start, source_start + count)] = dest_start
 
 min_location = math.inf
 
@@ -56,7 +53,10 @@ for seed in seeds:
     chain = [seed]
     current = seed
     for state in next_states.keys():
-        next_num = the_diagram[state].get(current, current)
+        curr_map = the_diagram[state]
+        next_num = next(
+            (curr_map[(start, end)] + current - start for start, end in curr_map if start <= current <= end),
+            current)
         chain += [next_num]
         current = next_num
 
